@@ -14,7 +14,6 @@
   <depend>rclcpp</depend>
   <depend>OpenCV</depend>
   <depend>geometry_msgs</depend>
-  <depend>vision_interface</depend>
   <depend>perception_interface</depend>
   <depend>std_srvs</depend>
   <depend>std_msgs</depend>

@@ -37,19 +37,19 @@ def generate_launch_description():
         extra_arguments=common_extra_arguments,
     )
 
-    radar_detect_fly_node = ComposableNode(
-        package="tdt_vision",
-        plugin="tdt_radar::DetectFly",
-        name="radar_detect_fly_node",
-        extra_arguments=common_extra_arguments,
-    )
+    # radar_detect_fly_node = ComposableNode(
+    #     package="tdt_vision",
+    #     plugin="tdt_radar::DetectFly",
+    #     name="radar_detect_fly_node",
+    #     extra_arguments=common_extra_arguments,
+    # )
 
-    lock_node = ComposableNode(
-        package="tdt_lock",
-        plugin="tdt_lock::Lock",
-        name="lock_node",
-        extra_arguments=common_extra_arguments,
-    )
+    # lock_node = ComposableNode(
+    #     package="tdt_lock",
+    #     plugin="tdt_lock::Lock",
+    #     name="lock_node",
+    #     extra_arguments=common_extra_arguments,
+    # )
 
     radar_container = ComposableNodeContainer(
         name="camera_detector_container",
@@ -62,8 +62,8 @@ def generate_launch_description():
             foxglove_node,
             radar_detect_node,
             radar_resolve_node,
-            radar_detect_fly_node,
-            lock_node,
+            # radar_detect_fly_node,
+            # lock_node,
         ],
         output="both",
         emulate_tty=True,

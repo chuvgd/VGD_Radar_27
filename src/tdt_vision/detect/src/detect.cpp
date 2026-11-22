@@ -10,10 +10,10 @@
 namespace tdt_radar {
 unsigned int count_img = 0;
 
-int getColor(cv::Mat& img)
+int getColor(cv::Mat& img) // 引用传递
 {
-    std::vector<cv::Mat> channels;
-    cv::split(img, channels);
+    std::vector<cv::Mat> channels; // 声明存储BGR通道
+    cv::split(img, channels); // 分离BGR通道
     cv::Mat    blueMinusRed = channels[0] - channels[2];
     cv::Mat    redMinusBlue = channels[2] - channels[0];
     cv::Scalar avgBlueMinusRed = cv::mean(blueMinusRed);
@@ -26,33 +26,33 @@ int getColor(cv::Mat& img)
     }
 }
 
-cv::Point2f Detect::get_2d(const cv::Point3f& point)
-{
-    cv::Mat world_rvec;
-    cv::Mat world_tvec;
-    cv::Mat camera_matrix;
-    cv::Mat dist_coeffs;
-    cv::FileStorage fs;
-    std::vector<cv::Point3f> objectPoints = {point};
-    fs.open("./config/camera_params.yaml", cv::FileStorage::READ);
-    fs["camera_matrix"] >> camera_matrix;
-    fs["dist_coeffs"] >> dist_coeffs;
-    fs.release();
+// cv::Point2f Detect::get_2d(const cv::Point3f& point)
+// {
+//     cv::Mat world_rvec; // 世界坐标系旋转向量
+//     cv::Mat world_tvec; // 世界坐标系平移向量
+//     cv::Mat camera_matrix; // 相机内参矩阵
+//     cv::Mat dist_coeffs; // 镜像畸变系数
+//     cv::FileStorage fs; 
+//     std::vector<cv::Point3f> objectPoints = {point}; // 世界坐标系点**
+//     fs.open("./config/camera_params.yaml", cv::FileStorage::READ);
+//     fs["camera_matrix"] >> camera_matrix;
+//     fs["dist_coeffs"] >> dist_coeffs;
+//     fs.release();
 
-    fs.open("./config/out_matrix.yaml", cv::FileStorage::READ);
-    fs["world_tvec"] >> world_tvec;
-    fs["world_rvec"] >> world_rvec;
-    fs.release();//读取参数
+//     fs.open("./config/out_matrix.yaml", cv::FileStorage::READ);
+//     fs["world_tvec"] >> world_tvec;
+//     fs["world_rvec"] >> world_rvec;
+//     fs.release();//读取参数
     
-    std::vector<cv::Point2f> temp;
-    cv::projectPoints(objectPoints,
-                    world_rvec,
-                    world_tvec,
-                    camera_matrix,
-                    dist_coeffs,
-                    temp);
-    return temp[0];
-}
+//     std::vector<cv::Point2f> temp;
+//     cv::projectPoints(objectPoints,
+//                     world_rvec,
+//                     world_tvec,
+//                     camera_matrix,
+//                     dist_coeffs,
+//                     temp);
+//     return temp[0];
+// }
 
 bool isRectInside(const cv::Rect& small, const cv::Rect& big)
 {
@@ -76,7 +76,7 @@ bool isBoxInside(const yolo::Box& small, const yolo::Box& big)
     return isRectInside(small_rect, big_rect);
 }
 
-cv::Rect getSafeRect(cv::Mat& image, cv::Rect& rect)
+cv::Rect getSafeRect(cv::Mat& image, cv::Rect& rect) //防出界
 {
     cv::Rect save_rect;
     save_rect.x = std::max(0, rect.x);
@@ -106,19 +106,19 @@ Detect::Detect(const rclcpp::NodeOptions& node_options)
     fs["armor_path"] >> armor_path;
     fs["classify_path"] >> classify_path;
     fs.release();
-
-    cv::FileStorage lock_fs("./config/lock_config.yaml", cv::FileStorage::READ);
-    if (!lock_fs.isOpened())
-    {
-        RCLCPP_WARN(this->get_logger(), "Cannot open lock_config.yaml, image compression disabled.");
-    }
-    else
-    {
-        lock_fs["compress_detect_image"] >> compress_detect_image_;
-        lock_fs["draw_detect_image"] >> draw_detect_image_;
-        lock_fs.release();
-    }
-    RCLCPP_INFO(this->get_logger(), "compress_detect_image: %d, draw_detect_image: %d", compress_detect_image_, draw_detect_image_);
+    // 读取lock_config.yaml文件，获取压缩和绘制检测结果的参数，调试用
+    // cv::FileStorage lock_fs("./config/lock_config.yaml", cv::FileStorage::READ);
+    // if (!lock_fs.isOpened())
+    // {
+    //     RCLCPP_WARN(this->get_logger(), "Cannot open lock_config.yaml, image compression disabled.");
+    // }
+    // else
+    // {
+    //     lock_fs["compress_detect_image"] >> compress_detect_image_;
+    //     lock_fs["draw_detect_image"] >> draw_detect_image_;
+    //     lock_fs.release();
+    // }
+    // RCLCPP_INFO(this->get_logger(), "compress_detect_image: %d, draw_detect_image: %d", compress_detect_image_, draw_detect_image_);
 
     std::ifstream file1(yolo_path.c_str());
     if (!file1.good())
@@ -185,12 +185,12 @@ Detect::Detect(const rclcpp::NodeOptions& node_options)
     image_sub = this->create_subscription<sensor_msgs::msg::Image>(
             "camera1/image", rclcpp::SensorDataQoS(),
             std::bind(&Detect::callback, this, std::placeholders::_1));
-    fly_sub = this->create_subscription<vision_interface::msg::FlyPoints>(
-        "/livox/lidar_fly_cluster", rclcpp::SensorDataQoS(),
-        std::bind(&Detect::fly_callback, this, std::placeholders::_1));
+    // fly_sub = this->create_subscription<vision_interface::msg::FlyPoints>(
+    //     "/livox/lidar_fly_cluster", rclcpp::SensorDataQoS(),
+    //     std::bind(&Detect::fly_callback, this, std::placeholders::_1));
     pub = this->create_publisher<vision_interface::msg::DetectResult>(
         "detect_result", rclcpp::SensorDataQoS());
-    if (compress_detect_image_)
+    if (compress_detect_image_) //lock_config.yaml
     {
         compressed_image_pub_ = this->create_publisher<sensor_msgs::msg::CompressedImage>("compressed_image", rclcpp::SensorDataQoS().keep_last(1));
         compress_running_.store(true, std::memory_order_release);
@@ -467,12 +467,12 @@ void Detect::callback(const std::shared_ptr<sensor_msgs::msg::Image> msg)
 }
 
 
-void Detect::fly_callback(const std::shared_ptr<vision_interface::msg::FlyPoints> msg)
-{
-    fly_point.x = msg->fly_enemy_x;
-    fly_point.y = msg->fly_enemy_y - 15;
-    fly_point.z = msg->fly_enemy_z;
-    // std::cout << "Fly Point: (" << fly_point.x << ", " << fly_point.y << ", " << fly_point.z << ")\n";
-}
+// void Detect::fly_callback(const std::shared_ptr<vision_interface::msg::FlyPoints> msg)
+// {
+//     fly_point.x = msg->fly_enemy_x;
+//     fly_point.y = msg->fly_enemy_y - 15;
+//     fly_point.z = msg->fly_enemy_z;
+//     // std::cout << "Fly Point: (" << fly_point.x << ", " << fly_point.y << ", " << fly_point.z << ")\n";
+// }
 }  // namespace tdt_radar
 RCLCPP_COMPONENTS_REGISTER_NODE(tdt_radar::Detect)

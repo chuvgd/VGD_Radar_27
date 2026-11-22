@@ -1,27 +1,3 @@
-<div align="center">
-
-# T-DT 2026 Radar
-
-> 2026年东北大学T-DT实验室 RoboMaster超级对抗赛 雷达代码
-
-<a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow"></a>
-<a href="https://neutdt.cn"><img alt="Home Page" src="https://img.shields.io/badge/Home%20Page-T--DT-green"></a>
-
-<p align="center">
-  <img src=".github/NEU.webp" width="300"/>
-  <img src=".github/T-DT.jpg" width="300"/>
-</p>
-
-</div>
-
-<br>
-
---------
-
-<br>
-
-<div align="left">
-
 # 版本和发布记录
 
 ### 当前版本
@@ -85,6 +61,7 @@
 
 **本项目提供了除串口、相机驱动、模型训练外雷达站的全部功能**
 
+![项目结构](.github/processon.png)
 ![项目结构](.github/processon.png)
 
 ### 单目相机

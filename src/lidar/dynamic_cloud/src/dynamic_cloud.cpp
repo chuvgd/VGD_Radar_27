@@ -25,7 +25,7 @@ DynamicCloud::DynamicCloud(const rclcpp::NodeOptions& node_options):rclcpp::Node
 
     sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("/livox/lidar", 10, std::bind(&DynamicCloud::callback, this, std::placeholders::_1));
     pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/livox/lidar_dynamic", 10);
-    fly_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/livox/lidar_fly", 10);
+    // fly_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/livox/lidar_fly", 10);
 
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Dynamic Cloud Launch!");
 }
@@ -34,7 +34,10 @@ void DynamicCloud::GetDynamicCloud(pcl::PointCloud<pcl::PointXYZ> &input_cloud,p
     int K=1;
     std::vector<std::thread> threads;//创建线程容器
     std::vector<pcl::PointCloud<pcl::PointXYZ>> clouds(thread_num);//创建点云容器
-    auto start=std::chrono::system_clock::now();
+    auto start=std::chrono::system_clovoid callback(...);   // 主回调：每收到一帧点云执行整条管线
+void GetDynamicCloud(input, output, threshold, thread_num);
+//                      输入点云   输出点云  距离阈值   线程数（cpp 里传 12）
+ck::now();
     int cloud_size=input_cloud.points.size();
     int step=cloud_size/thread_num;//计算每个线程处理的点云数量
     for(int i=0;i<thread_num;i++){
@@ -109,14 +112,14 @@ void TransformCloud(pcl::PointCloud<pcl::PointXYZ> &input_cloud, pcl::PointCloud
 void DynamicCloud::callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
 {    
     std::cout<<"ldar open"<<std::endl;
-    auto fly_have = [](pcl::PointXYZ &point) {
-        return (point.x > 12 && point.x < 27) &&
-               (point.y > 0.5 && point.y < 6) &&
-               (point.z > 1.7 && point.z < 3)||
-               (point.x > 1 && point.x < 16) &&
-               (point.y > 9 && point.y < 14.5) &&
-               (point.z > 1.7 && point.z < 3);
-    };//飞机存在
+    // auto fly_have = [](pcl::PointXYZ &point) {
+    //     return (point.x > 12 && point.x < 27) &&
+    //            (point.y > 0.5 && point.y < 6) &&
+    //            (point.z > 1.7 && point.z < 3)||
+    //            (point.x > 1 && point.x < 16) &&
+    //            (point.y > 9 && point.y < 14.5) &&
+    //            (point.z > 1.7 && point.z < 3);
+    // };//飞机存在
 
     auto receive_cloud = pcl::PointCloud<pcl::PointXYZ>();
     pcl::fromROSMsg(*msg, receive_cloud);//转换点云数据类型
@@ -161,10 +164,10 @@ void DynamicCloud::callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
             (-6.5-1.05/sqrt(2))<(point.y-point.x)&&(point.y-point.x)<(-6.5+1.05/sqrt(2)))
         )
         {
-            if(fly_have(point))
-            {
-                other_filtered_cloud.push_back(point);
-            }
+            // if(fly_have(point))
+            // {
+            //     other_filtered_cloud.push_back(point);
+            // }
             continue;
         }
         filtered_cloud.push_back(point);
@@ -202,19 +205,19 @@ void DynamicCloud::callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
     output.header.stamp = msg->header.stamp;
     pub_->publish(output);//发布动态点云(车)
 
-    //筛除飞机点云并发布
-    pcl::PointCloud<pcl::PointXYZ> fly_cloud;
-    for (size_t i = 0; i < other_accumulated_cloud.size(); i++)
-    {
-        auto &point = other_accumulated_cloud.points[i];
-        if (fly_have(point))
-        {
-            fly_cloud.push_back(point);
-        }
-    }
-    fly_cloud.header.frame_id = "rm_frame";
-    pcl::toROSMsg(fly_cloud, output);
-    fly_pub_->publish(output);//发布动态点云(飞机)
+    // //筛除飞机点云并发布
+    // pcl::PointCloud<pcl::PointXYZ> fly_cloud;
+    // for (size_t i = 0; i < other_accumulated_cloud.size(); i++)
+    // {
+    //     auto &point = other_accumulated_cloud.points[i];
+    //     if (fly_have(point))
+    //     {
+    //         fly_cloud.push_back(point);
+    //     }
+    // }
+    // fly_cloud.header.frame_id = "rm_frame";
+    // pcl::toROSMsg(fly_cloud, output);
+    // fly_pub_->publish(output);//发布动态点云(飞机)
     // std::cout << "publish time: " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-ta).count()/1000.0 << std::endl;
     // RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "cloud size: %d", accumulated_cloud.points.size());
 //     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();

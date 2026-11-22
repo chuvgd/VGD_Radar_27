@@ -10,9 +10,9 @@ NodeDebug::NodeDebug(const rclcpp::NodeOptions &node_options)
   image_sub_ = create_subscription<sensor_msgs::msg::Image>(
       "camera1/image", rclcpp::SensorDataQoS(),
       std::bind(&NodeDebug::image_callback, this, std::placeholders::_1));
-  image2_sub_ = create_subscription<sensor_msgs::msg::Image>(
-      "camera2/image", rclcpp::SensorDataQoS(),
-      std::bind(&NodeDebug::image2_callback, this, std::placeholders::_1));
+  // image2_sub_ = create_subscription<sensor_msgs::msg::Image>(
+  //     "camera2/image", rclcpp::SensorDataQoS(),
+  //     std::bind(&NodeDebug::image2_callback, this, std::placeholders::_1));
 
   image_pub_ = create_publisher<sensor_msgs::msg::CompressedImage>(
       "compressed_image", 10);

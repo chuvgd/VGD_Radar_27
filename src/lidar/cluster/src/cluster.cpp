@@ -26,10 +26,10 @@ namespace tdt_radar{
         // }
 
         sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("/livox/lidar_dynamic", 10, std::bind(&Cluster::callback, this, std::placeholders::_1));
-        fly_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("/livox/lidar_fly", 10, std::bind(&Cluster::fly_callback, this, std::placeholders::_1));
+        // fly_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("/livox/lidar_fly", 10, std::bind(&Cluster::fly_callback, this, std::placeholders::_1));
         pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/livox/lidar_cluster", 10);
-        fly_pub_ = this->create_publisher<vision_interface::msg::FlyPoints>("/livox/lidar_fly_cluster", 10);
-        fly_enemy_point_pub_ = this->create_publisher<geometry_msgs::msg::Point32>("/livox/lidar_fly_point", 10);
+        // fly_pub_ = this->create_publisher<vision_interface::msg::FlyPoints>("/livox/lidar_fly_cluster", 10);
+        // fly_enemy_point_pub_ = this->create_publisher<geometry_msgs::msg::Point32>("/livox/lidar_fly_point", 10);
         // timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&Cluster::timer_callback, this));
 
     }
@@ -88,7 +88,7 @@ void Cluster::callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
 //     RCLCPP_INFO(this->get_logger(), "Cluster callback time: %f", std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000.0);
 }
 
-
+/*大飞机时代
 void Cluster::fly_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
 {
     // std::cout<<"找到飞机"<<std::endl;
@@ -218,7 +218,7 @@ void Cluster::fly_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
     // std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
     // RCLCPP_INFO(this->get_logger(), "Fly callback time: %f", std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000.0);
 }
-
+*/
 
 void Cluster::timer_callback()
 {
@@ -252,7 +252,7 @@ void Cluster::timer_callback()
     enemy_point.y = enemy_in_livox.y();
     enemy_point.z = (enemy_in_rm.z() - t.z());
     std::cout<<"敌方坐标:("<<enemy_point.x<<","<<enemy_point.y<<","<<enemy_point.z<<")"<<std::endl;
-    fly_enemy_point_pub_->publish(enemy_point);
+    // fly_enemy_point_pub_->publish(enemy_point);
     
 }
 }//namespace tdt_radar

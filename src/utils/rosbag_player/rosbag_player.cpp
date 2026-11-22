@@ -49,7 +49,7 @@ public:
 
         pointcloud_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/livox/lidar", 10);
         image_publisher_ = this->create_publisher<sensor_msgs::msg::Image>("camera1/image", rclcpp::SensorDataQoS());
-        image2_publisher_ = this->create_publisher<sensor_msgs::msg::Image>("camera2/image", rclcpp::SensorDataQoS());
+        // image2_publisher_ = this->create_publisher<sensor_msgs::msg::Image>("camera2/image", rclcpp::SensorDataQoS());
         match_info_publisher_ = this->create_publisher<vision_interface::msg::MatchInfo>("/match_info", 10);
         sentry2radar_publisher_ = this->create_publisher<vision_interface::msg::Sentry2Radar>("/sentry2RadarData", 10);
         robot_position_publisher_ = this->create_publisher<radio_interface::msg::Position>("/robot_position", 10);

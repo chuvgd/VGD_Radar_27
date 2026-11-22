@@ -22,7 +22,7 @@
 #include "opencv2/opencv.hpp"
 #include "sensor_msgs/msg/compressed_image.hpp"
 #include "vision_interface/msg/detect_result.hpp"
-#include "vision_interface/msg/fly_points.hpp"
+// #include "vision_interface/msg/fly_points.hpp"
 #include "yolos.hpp"
 #include "BaseInfer.hpp"
 #include <fstream>
@@ -38,12 +38,12 @@ public:
     explicit Detect(const rclcpp::NodeOptions& options);
     ~Detect() override;
     void callback(const std::shared_ptr<sensor_msgs::msg::Image> msg);
-    void fly_callback(const std::shared_ptr<vision_interface::msg::FlyPoints> msg);
+    // void fly_callback(const std::shared_ptr<vision_interface::msg::FlyPoints> msg);
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub;
     rclcpp::Subscription<sensor_msgs::msg::CompressedImage>::SharedPtr compressed_image_sub;
-    rclcpp::Subscription<vision_interface::msg::FlyPoints>::SharedPtr fly_sub;
-    cv::Point3f fly_point;
-    cv::Point2f get_2d(const cv::Point3f& point);
+    // rclcpp::Subscription<vision_interface::msg::FlyPoints>::SharedPtr fly_sub;
+    // cv::Point3f fly_point;
+    // cv::Point2f get_2d(const cv::Point3f& point);
 
 
 private:

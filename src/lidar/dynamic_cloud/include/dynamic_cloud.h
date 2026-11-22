@@ -27,16 +27,16 @@ class DynamicCloud : public rclcpp::Node
     private:
     int accumulate_time = 3;
     int accumulate_count = 0;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr map_cloud;
-    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> accumulated_clouds_;
-    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> other_accumulated_clouds_;
-    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_;
-    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
-    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr fly_pub_;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr map_cloud; // RM2026.pcd 加载+体素降采样后的静态地图
+    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> accumulated_clouds_; // 动态点（车）的 3 帧缓存队列
+    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> other_accumulated_clouds_; // 飞机区域点的 3 帧缓存队列
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_;// 订阅 /livox/lidar（原始点云）
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;// 发布 /dynamic_cloud（动态点云）
+    // rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr fly_pub_;// 发布 /fly_cloud（飞机区域点云）
     void callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg);
     void GetDynamicCloud(pcl::PointCloud<pcl::PointXYZ> &input_cloud,pcl::PointCloud<pcl::PointXYZ> &output_cloud,float threshold,int thread_num);
-    pcl::KdTreeFLANN<pcl::PointXYZ> kd_Tree;
-    tf2_ros::Buffer tf_buffer_;
+    pcl::KdTreeFLANN<pcl::PointXYZ> kd_Tree; // 构造时用地图建索引，运行时做 nearestKSearch
+    tf2_ros::Buffer tf_buffer_; 
     tf2_ros::TransformListener tf_listener_;
 };
 }//namespace tdt_radar

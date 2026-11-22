@@ -1,6 +1,0 @@
-float32 fly_enemy_x
-float32 fly_enemy_y
-float32 fly_enemy_z
-float32 fly_ally_x
-float32 fly_ally_y
-float32 fly_ally_z

@@ -1,0 +1,12 @@
+2026.11.22git提交修改记录
+      删除无人机自启动，检测节点，消息接口，推理模型，检测框代码，注释项目里的有关无人机配置代码和一些死代码
+       /home/wys/LIDAR_PROJECT/VGD_Radar_27/src/tdt_vision/package.xml
+      删除：  17 <depend>vision_interface</depend>
+      /home/wys/LIDAR_PROJECT/VGD_Radar_27/src/lock/package.xml
+      删除： 22   <depend>openCV</depend> : 小写错误，且CmakeList已显式查找
+      /home/wys/LIDAR_PROJECT/VGD_Radar_27/src/livox_driver/livox_ros2_driver/package.xml
+      删除： 21  <depend>libpcl-all-dev</depend>
+      30  <depend>git</depend>
+      31  <depend>apr</depend>
+      ：Livox 的 CMakeLists 通过它们的原生 CMake/pkg-config 接口找到 PCL 和 APR，并将 git 当作可执行文件来调用。这些都不是 ROS 包。
+                  

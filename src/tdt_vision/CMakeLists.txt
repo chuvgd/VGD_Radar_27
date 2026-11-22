@@ -8,10 +8,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include_directories(  
     "detect/include"
-    "detect_fly/include"
+    # "detect_fly/include"
     "resolve/include"
     "calibrate/include"
-    "calibrate_fly/include"
+    # "calibrate_fly/include"
     "camera/include"
     "TDT_Camera/include"
     "record/include"
@@ -78,23 +78,23 @@ rclcpp_components_register_node(${RADAR_DETECT}
     EXECUTABLE ${RADAR_DETECT}_node
 )
 
-set(RADAR_DETECT_FLY "radar_detect_fly")
-file(GLOB_RECURSE RADAR_DETECT_FLY_SRCS "detect_fly/src/*.cpp")
-ament_auto_add_library(${RADAR_DETECT_FLY} SHARED
-    ${RADAR_DETECT_FLY_SRCS}
-)
-target_link_libraries(${RADAR_DETECT_FLY}
-    utils          
-    infer          
-    ${nvinfer_LIBRARY}
-    ${nvonnxparser_LIBRARY}
-    CUDA::cudart
-    fmt            
-)
-rclcpp_components_register_node(${RADAR_DETECT_FLY}
-    PLUGIN "tdt_radar::DetectFly"
-    EXECUTABLE ${RADAR_DETECT_FLY}_node
-)
+# set(RADAR_DETECT_FLY "radar_detect_fly")
+# file(GLOB_RECURSE RADAR_DETECT_FLY_SRCS "detect_fly/src/*.cpp")
+# ament_auto_add_library(${RADAR_DETECT_FLY} SHARED
+#     ${RADAR_DETECT_FLY_SRCS}
+# )
+# target_link_libraries(${RADAR_DETECT_FLY}
+#     utils          
+#     infer          
+#     ${nvinfer_LIBRARY}
+#     ${nvonnxparser_LIBRARY}
+#     CUDA::cudart
+#     fmt            
+# )
+# rclcpp_components_register_node(${RADAR_DETECT_FLY}
+#     PLUGIN "tdt_radar::DetectFly"
+#     EXECUTABLE ${RADAR_DETECT_FLY}_node
+# )
 
 set(RADAR_RESOLVE "radar_resolve")
 file(GLOB_RECURSE RADAR_RESOLVE_SRCS "resolve/src/*.cpp")
@@ -117,15 +117,15 @@ rclcpp_components_register_node(${RADAR_CALIBRATE}
     EXECUTABLE ${RADAR_CALIBRATE}_node
 )
 
-set(RADAR_CALIBRATE_FLY "radar_calibrate_fly")
-file(GLOB_RECURSE RADAR_CALIBRATE_FLY_SRCS "calibrate_fly/src/*.cpp")
-ament_auto_add_library(${RADAR_CALIBRATE_FLY} SHARED
-    ${RADAR_CALIBRATE_FLY_SRCS}
-)
-rclcpp_components_register_node(${RADAR_CALIBRATE_FLY}
-    PLUGIN "tdt_radar::CalibrateFly"
-    EXECUTABLE ${RADAR_CALIBRATE_FLY}_node
-)
+# set(RADAR_CALIBRATE_FLY "radar_calibrate_fly")
+# file(GLOB_RECURSE RADAR_CALIBRATE_FLY_SRCS "calibrate_fly/src/*.cpp")
+# ament_auto_add_library(${RADAR_CALIBRATE_FLY} SHARED
+#     ${RADAR_CALIBRATE_FLY_SRCS}
+# )
+# rclcpp_components_register_node(${RADAR_CALIBRATE_FLY}
+#     PLUGIN "tdt_radar::CalibrateFly"
+#     EXECUTABLE ${RADAR_CALIBRATE_FLY}_node
+# )
 
 set(RADAR_RECORD_NODE "radar_record") # radar_record节点名称
 file(GLOB_RECURSE RADAR_RECORD_SRCS "record/src/*.cpp")
